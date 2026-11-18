@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apocalypse — Code Aesthetic</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="scene">
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+
+    <section class="editor" aria-label="Animated code">
+      <div class="editor-top">
+        <div class="traffic-lights"><i></i><i></i><i></i></div>
+        <span class="file-name">maybe_us.js</span>
+        <span class="language">JavaScript</span>
+      </div>
+
+      <div class="code-area">
+        <div class="line-numbers" id="lineNumbers"></div>
+        <pre><code id="code"></code><span class="cursor"></span></pre>
+      </div>
+
+      <div class="editor-footer">
+        <span><i class="status-dot"></i> All changes saved</span>
+        <span>Ln <b id="lineStatus">1</b>, Col 1</span>
+      </div>
+    </section>
+
+    <div class="keyboard" aria-hidden="true">
+      <div class="keyboard-glow"></div>
+      <div class="keys" id="keys"></div>
+    </div>
+
+    <div class="caption" id="caption">
+      somewhere, in another life.
+    </div>
+
+    <div class="controls">
+      <button class="music-button" id="musicButton" type="button">
+        ♫ Play Music
+      </button>
+
+      <button class="replay" id="replay" type="button">
+        ↻ Replay
+      </button>
+    </div>
+
+    <audio id="backgroundMusic" loop>
+      <source src="audio/apocalypse.mp3" type="audio/mpeg">
+    </audio>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
