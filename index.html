@@ -2,58 +2,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Apocalypse — Code Aesthetic</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apocalypse | Code Aesthetic</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="scene">
-    <div class="ambient ambient-one"></div>
-    <div class="ambient ambient-two"></div>
 
-    <section class="editor" aria-label="Animated code">
-      <div class="editor-top">
-        <div class="traffic-lights"><i></i><i></i><i></i></div>
-        <span class="file-name">maybe_us.js</span>
-        <span class="language">JavaScript</span>
-      </div>
+    <div class="background-glow"></div>
 
-      <div class="code-area">
-        <div class="line-numbers" id="lineNumbers"></div>
-        <pre><code id="code"></code><span class="cursor"></span></pre>
-      </div>
+    <main class="container">
+        <header class="header">
+            <div>
+                <p class="subtitle">A LITTLE PIECE OF FOREVER</p>
+                <h1>Apocalypse<span>.</span></h1>
+                <p class="artist">Cigarettes After Sex</p>
+            </div>
+            <div class="status">
+                <span class="status-dot"></span>
+                NOW PLAYING
+            </div>
+        </header>
 
-      <div class="editor-footer">
-        <span><i class="status-dot"></i> All changes saved</span>
-        <span>Ln <b id="lineStatus">1</b>, Col 1</span>
-      </div>
-    </section>
+        <section class="editor">
+            <div class="editor-header">
+                <div class="window-controls">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <p>our_story.js</p>
+                <span class="editor-label">JAVASCRIPT</span>
+            </div>
 
-    <div class="keyboard" aria-hidden="true">
-      <div class="keyboard-glow"></div>
-      <div class="keys" id="keys"></div>
-    </div>
+            <div class="editor-content">
+                <div id="lineNumbers" class="line-numbers"></div>
+                <div id="code" class="code"></div>
+            </div>
 
-    <div class="caption" id="caption">
-      somewhere, in another life.
-    </div>
+            <div class="editor-footer">
+                <span>UTF-8</span>
+                <span>JavaScript</span>
+                <span>♡ made with love</span>
+            </div>
+        </section>
 
-    <div class="controls">
-      <button class="music-button" id="musicButton" type="button">
-        ♫ Play Music
-      </button>
+        <section class="controls">
+            <button id="playButton">▶ Play Music</button>
+            <button id="replayButton">↻ Replay</button>
+        </section>
 
-      <button class="replay" id="replay" type="button">
-        ↻ Replay
-      </button>
-    </div>
+        <p class="bottom-text">some feelings are written in the stars.</p>
 
-    <audio id="backgroundMusic" loop>
-      <source src="audio/apocalypse.mp3" type="audio/mpeg">
-    </audio>
-  </main>
+        <audio id="backgroundMusic" preload="auto">
+            <source src="audio/apocalypse.mp3" type="audio/mpeg">
+        </audio>
+    </main>
 
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

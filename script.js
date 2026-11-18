@@ -1,194 +1,206 @@
 
-const codeElement = document.getElementById("code");
-const lineNumbers = document.getElementById("lineNumbers");
-const lineStatus = document.getElementById("lineStatus");
-const replayButton = document.getElementById("replay");
-const keys = document.getElementById("keys");
-
+const code = document.getElementById("code");
 const backgroundMusic = document.getElementById("backgroundMusic");
-const musicButton = document.getElementById("musicButton");
+const playButton = document.getElementById("playButton");
+const replayButton = document.getElementById("replayButton");
+const lineNumbers = document.getElementById("lineNumbers");
 
-const lines = [
-  '<span class="comment">// maybe in another lifetime...</span>',
-  '',
-  '<span class="keyword">const</span> <span class="variable">you</span> = <span class="string">"the one I never forgot"</span>;',
-  '<span class="keyword">let</span> <span class="variable">time</span> = <span class="string">"moving forward"</span>;',
-  '',
-  '<span class="keyword">function</span> <span class="function">remember</span>() {',
-  '  <span class="keyword">if</span> (<span class="variable">the_night</span> === <span class="string">"quiet"</span>) {',
-  '    <span class="keyword">return</span> <span class="string">"I still think of you."</span>;',
-  '  }',
-  '}',
-  '',
-  '<span class="comment">// some memories never learn to fade.</span>',
-  '<span class="variable">remember</span>();'
+let typingInterval = null;
+let firedCues = new Set();
+let introTimeout = null;
+
+const introLines = [
+    "const myHeart = {",
+    '    feeling: "in love",',
+    '    reason: "you",',
+    '    status: "forever"',
+    "};",
+    "",
+    "function describeUs() {",
+    '    return "A story written in the stars";',
+    "}",
+    "",
+    "const memories = describeUs();",
+    'console.log("Some feelings never fade...");'
 ];
 
-const plainLines = [
-  '// maybe in another lifetime...',
-  '',
-  'const you = "the one I never forgot";',
-  'let time = "moving forward";',
-  '',
-  'function remember() {',
-  '  if (the_night === "quiet") {',
-  '    return "I still think of you.";',
-  '  }',
-  '}',
-  '',
-  '// some memories never learn to fade.',
-  'remember();'
+const chorusCues = [
+    {
+        time: 55,
+        text: "Got the music in you, baby, tell me why",
+        reset: true
+    },
+    {
+        time: 62,
+        text: "Got the music in you, baby, tell me why"
+    },
+    {
+        time: 70,
+        text: "You've been locked in here forever and you just can't say goodbye"
+    },
+    {
+        time: 120,
+        text: "Your lips, my lips, apocalypse",
+        reset: true
+    },
+    {
+        time: 127,
+        text: "Your lips, my lips, apocalypse"
+    },
+    {
+        time: 177,
+        text: "Got the music in you, baby, tell me why",
+        reset: true
+    },
+    {
+        time: 184,
+        text: "Got the music in you, baby, tell me why"
+    },
+    {
+        time: 192,
+        text: "You've been locked in here forever and you just can't say goodbye"
+    },
+    {
+        time: 200,
+        text: "You've been locked in here forever and you just can't say goodbye"
+    }
 ];
-
-let lineIndex = 0;
-let charIndex = 0;
-let timer;
-
-function makeKeyboard() {
-  for (let i = 0; i < 60; i++) {
-    const key = document.createElement("div");
-    key.className = "key";
-    keys.appendChild(key);
-  }
-}
-
-function typeLine() {
-  if (lineIndex >= lines.length) {
-    lineStatus.textContent = lines.length;
-    return;
-  }
-
-  const currentPlain = plainLines[lineIndex];
-
-  if (currentPlain.length === 0) {
-    codeElement.innerHTML += "\n";
-    lineIndex++;
-    charIndex = 0;
-    updateLineNumbers();
-    timer = setTimeout(typeLine, 260);
-    return;
-  }
-
-  const visible = currentPlain.slice(0, charIndex + 1);
-  const safeText = escapeHTML(visible);
-  const colored = colorPartialLine(lineIndex, safeText);
-  const completed = lines.slice(0, lineIndex).join("\n");
-
-  codeElement.innerHTML = completed + (lineIndex ? "\n" : "") + colored;
-
-  charIndex++;
-  lineStatus.textContent = lineIndex + 1;
-
-  if (charIndex >= currentPlain.length) {
-    lineIndex++;
-    charIndex = 0;
-    updateLineNumbers();
-    timer = setTimeout(typeLine, 520);
-  } else {
-    timer = setTimeout(typeLine, 55 + Math.random() * 55);
-  }
-}
-
-function colorPartialLine(index, text) {
-  if (index === 0 || index === 11) {
-    return `<span class="comment">${text}</span>`;
-  }
-
-  if (index === 2) {
-    return text
-      .replace("const", '<span class="keyword">const</span>')
-      .replace("you", '<span class="variable">you</span>')
-      .replace(/&quot;(.*?)&quot;/g, '<span class="string">"$1"</span>');
-  }
-
-  if (index === 3) {
-    return text
-      .replace("let", '<span class="keyword">let</span>')
-      .replace("time", '<span class="variable">time</span>')
-      .replace(/&quot;(.*?)&quot;/g, '<span class="string">"$1"</span>');
-  }
-
-  if (index === 5) {
-    return text
-      .replace("function", '<span class="keyword">function</span>')
-      .replace("remember", '<span class="function">remember</span>');
-  }
-
-  if (index === 6) {
-    return text
-      .replace("if", '<span class="keyword">if</span>')
-      .replace("the_night", '<span class="variable">the_night</span>')
-      .replace(/&quot;(.*?)&quot;/g, '<span class="string">"$1"</span>');
-  }
-
-  if (index === 7) {
-    return text
-      .replace("return", '<span class="keyword">return</span>')
-      .replace(/&quot;(.*?)&quot;/g, '<span class="string">"$1"</span>');
-  }
-
-  if (index === 12) {
-    return text.replace("remember", '<span class="variable">remember</span>');
-  }
-
-  return text;
-}
-
-function escapeHTML(value) {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;");
-}
 
 function updateLineNumbers() {
-  lineNumbers.innerHTML = Array.from(
-    { length: Math.max(lineIndex + 1, 1) },
-    (_, i) => i + 1
-  ).join("<br>");
-}
+    lineNumbers.innerHTML = "";
 
-function replay() {
-  clearTimeout(timer);
+    const totalLines = code.innerText.split("\n").length;
 
-  lineIndex = 0;
-  charIndex = 0;
-
-  codeElement.innerHTML = "";
-  lineNumbers.innerHTML = "1";
-  lineStatus.textContent = "1";
-
-  timer = setTimeout(typeLine, 900);
-}
-
-async function toggleMusic() {
-  if (backgroundMusic.paused) {
-    try {
-      await backgroundMusic.play();
-
-      musicButton.textContent = "♫ Music Playing";
-      musicButton.classList.add("playing");
-    } catch (error) {
-      musicButton.textContent = "Music unavailable";
+    for (let i = 1; i <= totalLines; i++) {
+        const line = document.createElement("div");
+        line.textContent = i;
+        lineNumbers.appendChild(line);
     }
-  } else {
-    backgroundMusic.pause();
-
-    musicButton.textContent = "♫ Play Music";
-    musicButton.classList.remove("playing");
-  }
 }
 
-backgroundMusic.volume = 0.35;
+function stopTyping() {
+    clearInterval(typingInterval);
+    clearTimeout(introTimeout);
+}
 
-backgroundMusic.addEventListener("ended", () => {
-  musicButton.textContent = "♫ Play Music";
-  musicButton.classList.remove("playing");
+function typeLine(text, className = "", reset = false) {
+    stopTyping();
+
+    if (reset) {
+        code.innerHTML = "";
+    }
+
+    const line = document.createElement("div");
+    line.className = className;
+    code.appendChild(line);
+
+    let index = 0;
+
+    typingInterval = setInterval(() => {
+        if (index < text.length) {
+            line.textContent += text.charAt(index);
+            index++;
+            updateLineNumbers();
+        } else {
+            clearInterval(typingInterval);
+            typingInterval = null;
+        }
+    }, 38);
+}
+
+function typeIntro() {
+    stopTyping();
+    code.innerHTML = "";
+
+    let lineIndex = 0;
+
+    function typeNextLine() {
+        if (lineIndex >= introLines.length) {
+            updateLineNumbers();
+            return;
+        }
+
+        const line = document.createElement("div");
+        line.className = "code-line";
+        code.appendChild(line);
+
+        const text = introLines[lineIndex];
+        let characterIndex = 0;
+
+        typingInterval = setInterval(() => {
+            if (characterIndex < text.length) {
+                line.textContent += text.charAt(characterIndex);
+                characterIndex++;
+                updateLineNumbers();
+            } else {
+                clearInterval(typingInterval);
+                typingInterval = null;
+                lineIndex++;
+                introTimeout = setTimeout(typeNextLine, 250);
+            }
+        }, 45);
+    }
+
+    typeNextLine();
+}
+
+function checkChorusTiming() {
+    const currentTime = backgroundMusic.currentTime;
+
+    chorusCues.forEach((cue, index) => {
+        if (currentTime >= cue.time && !firedCues.has(index)) {
+            firedCues.add(index);
+            typeLine(cue.text, "lyric-line", cue.reset === true);
+        }
+    });
+}
+
+async function playMusic() {
+    try {
+        await backgroundMusic.play();
+        playButton.textContent = "Ⅱ Pause Music";
+    } catch (error) {
+        console.error("Music playback error:", error);
+        playButton.textContent = "▶ Play Music";
+        alert("Music could not play. Check that audio/apocalypse.mp3 exists and try again.");
+    }
+}
+
+function pauseMusic() {
+    backgroundMusic.pause();
+    playButton.textContent = "▶ Play Music";
+}
+
+function replayEverything() {
+    stopTyping();
+    firedCues.clear();
+
+    backgroundMusic.pause();
+    backgroundMusic.currentTime = 0;
+
+    typeIntro();
+    playMusic();
+}
+
+playButton.addEventListener("click", () => {
+    if (backgroundMusic.paused) {
+        playMusic();
+    } else {
+        pauseMusic();
+    }
 });
 
-makeKeyboard();
-replay();
+replayButton.addEventListener("click", replayEverything);
 
-replayButton.addEventListener("click", replay);
-musicButton.addEventListener("click", toggleMusic);
+backgroundMusic.addEventListener("timeupdate", checkChorusTiming);
+
+backgroundMusic.addEventListener("ended", () => {
+    playButton.textContent = "▶ Play Music";
+});
+
+backgroundMusic.addEventListener("error", () => {
+    console.error("Audio file could not be loaded:", backgroundMusic.error);
+});
+
+typeIntro();
+updateLineNumbers();
